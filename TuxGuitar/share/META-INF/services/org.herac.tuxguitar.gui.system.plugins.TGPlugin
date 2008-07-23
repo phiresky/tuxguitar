@@ -1,1 +1,25 @@
-# Add here the TGPlugin implementation class names.
+### File Format Plugins
+org.herac.tuxguitar.io.tg.TGPluginListImpl
+org.herac.tuxguitar.io.gtp.GTPPluginList
+org.herac.tuxguitar.io.ptb.PTInputStreamPlugin
+org.herac.tuxguitar.io.tef.TEPluginImporter
+org.herac.tuxguitar.io.midi.MidiPluginList
+org.herac.tuxguitar.io.lilypond.LilypondPluginExporter
+org.herac.tuxguitar.io.musicxml.MusicXMLPluginExporter
+org.herac.tuxguitar.io.pdf.PDFPluginExporter
+org.herac.tuxguitar.io.ascii.ASCIIPluginExporter
+
+## Sound Plugins
+org.herac.tuxguitar.player.impl.jsa.MidiPluginList
+#org.herac.tuxguitar.player.impl.midiport.alsa.MidiPortProviderPlugin
+#org.herac.tuxguitar.player.impl.midiport.fluidsynth.MidiPortProviderPlugin
+#org.herac.tuxguitar.player.impl.midiport.oss.MidiPortProviderPlugin
+#org.herac.tuxguitar.player.impl.midiport.winmm.MidiPortProviderPlugin
+#org.herac.tuxguitar.player.impl.midiport.coreaudio.MidiPortReaderPlugin
+
+### Browser plugins
+org.herac.tuxguitar.gui.tools.browser.ftp.TGBrowserPluginImpl
+
+### Others
+org.herac.tuxguitar.tray.TGTrayPlugin
+org.herac.tuxguitar.gui.tools.custom.converter.TGConverterPlugin
