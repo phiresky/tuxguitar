@@ -83,26 +83,32 @@ public class TGBrowserImpl extends TGBrowser{
 	public List listElements() throws TGBrowserException {
 		List elements = new ArrayList();
 		try {
-			this.client.ascii();
+			this.client.binary();
+			
 			String[] names = parseString(this.client.nameList(this.path)).split("\n");
 			String[] infos = parseString(this.client.list()).split("\n");
 			if(names.length > 0 && infos.length > 0){
 				for(int i = 0;i < names.length;i++){
 					String name = names[i].trim();
 					
-					if(name.indexOf(this.path) == 0 && name.length() > (this.path.length() + 2)){
-						name = name.substring(this.path.length() + 1);
+					if(name.indexOf(this.path) == 0 && name.length() > this.path.length()){
+						name = name.substring(this.path.length());
 					}
-					
-					for(int j = 0;j < infos.length;j++){
-						String info = infos[j].trim();
-						if(info.indexOf(name) > 0){
-							elements.add(new TGBrowserElementImpl(this,name,info,this.path));
-							break;
+					while(name.indexOf("/") == 0){
+						name = name.substring(1);
+					}
+					if( name.length() > 0 ){
+						for(int j = 0;j < infos.length;j++){
+							String info = infos[j].trim();
+							if(info.indexOf(name) > 0){
+								elements.add(new TGBrowserElementImpl(this,name,info,this.path));
+								break;
+							}
 						}
 					}
 				}
 			}
+			
 		} catch (Throwable throwable) {
 			throw new TGBrowserException(throwable);
 		}
@@ -114,9 +120,7 @@ public class TGBrowserImpl extends TGBrowser{
 			this.client.cd(path);
 			this.client.binary();
 			
-			byte[] bytes = getByteBuffer( this.client.get(element.getName()) , false );
-			
-			this.client.ascii();
+			byte[] bytes = getByteBuffer( this.client.get(element.getName()) );
 			
 			return new ByteArrayInputStream( bytes );
 		} catch (Throwable throwable) {
@@ -126,7 +130,7 @@ public class TGBrowserImpl extends TGBrowser{
 	
 	private String parseString(InputStream in) throws TGBrowserException{
 		try {
-			byte[] bytes = getByteBuffer(in, true);
+			byte[] bytes = getByteBuffer(in);
 			
 			return new String( bytes );
 		} catch (Throwable throwable) {
@@ -134,25 +138,20 @@ public class TGBrowserImpl extends TGBrowser{
 		}
 	}
 	
-	private byte[] getByteBuffer(InputStream in, boolean checkAvailable) throws IOException{
-		if(!checkAvailable || in.available() > 0){
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			
-			int read = 0;
-			while((read = in.read()) != -1){
-				out.write(read);
-			}
-			
-			byte[] bytes = out.toByteArray();
-			
-			in.close();
-			out.close();
-			out.flush();
-			
-			return bytes;
-		}
-		in.close();
+	private byte[] getByteBuffer(InputStream in) throws IOException{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
-		return new byte[0];
+		int read = 0;
+		while((read = in.read()) != -1){
+			out.write(read);
+		}
+		
+		byte[] bytes = out.toByteArray();
+		
+		in.close();
+		out.close();
+		out.flush();
+		
+		return bytes;
 	}
 }
